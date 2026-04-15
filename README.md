@@ -70,13 +70,13 @@ Dla Oracle XE 18c+ service name to zazwyczaj `XE` lub `XEPDB1` (PDB). Jeśli dos
 
 ## Dlaczego wrapper, a nie bezpośrednio SQLcl?
 
-Jeśli na maszynie masz zainstalowany Oracle Client / Instant Client, SQLcl **automatycznie wykrywa OCI driver** w PATH i próbuje go użyć — co kończy się błędem `no ocijdbc23 in java.library.path`, jeśli wersje się nie zgadzają. Wrapper:
+Jeśli na maszynie masz zainstalowany Oracle Client / Instant Client, SQLcl **automatycznie wykrywa OCI driver** w PATH i próbuje go użyć — co kończy się błędem `no ocijdbc23 in java.library.path`, jeśli wersje się nie zgadzają (np. lokalny Oracle 18c XE vs. SQLcl 26.1 szukający ocijdbc23). Wrapper:
 
 - Czyści zmienne `ORACLE_HOME`, `TNS_ADMIN`, `NLS_LANG`
 - Usuwa wpisy `oracle` / `instantclient` / `oraclexe` z `PATH`
 - Odpala SQLcl, który wtedy używa **czystego Java thin JDBC** (brak zależności od natywnych bibliotek)
 
-Dzięki temu działa niezależnie od tego co jest zainstalowane lokalnie.
+**Ważne:** wrapper używa `SETLOCAL`, więc zmiany środowiskowe są **izolowane wyłącznie do procesu SQLcl** — nie mają żadnego wpływu na inne działające aplikacje, DBeaver, SSMS ani globalne zmienne systemu. Po zakończeniu SQLcl środowisko rodzica (Claude Code) wraca do stanu sprzed uruchomienia wrappera.
 
 ## Bezpieczeństwo
 
