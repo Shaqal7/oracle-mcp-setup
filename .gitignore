@@ -1,0 +1,17 @@
+# Credentials - NEVER commit
+.env
+
+# SQLcl temporary files
+_temp_*.sql
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Claude Code local settings
+.claude/
